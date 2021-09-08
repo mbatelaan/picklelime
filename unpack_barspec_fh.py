@@ -110,6 +110,7 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
                 .find("FermAct")
                 .text.lower()
             )
+            print(ferm_act_string_1, ferm_act_string_2)
 
             feynhellopstring = ""
             feynhellstring = ""
@@ -194,6 +195,8 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
                 or ferm_act_string_2 == "unprec_slrc_feynhell"
             ):
                 ferm_act_string = "unprec_slrc_feynhell"
+            else :
+                ferm_act_string = ferm_act_string_1+"_"+ferm_act_string_2
 
             # if ferm_act_string == "clover":
             #     clover_coeff = (
