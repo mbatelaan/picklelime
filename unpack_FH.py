@@ -16,3 +16,16 @@ ub.unpack_barspec_FH(
     loc="/scratch/usr/hhpmbate/limepickle/32x64/b5p50kp120900kp120900/lp0001_cv3_q000/",
     # momdict=momdict,
 )
+
+
+# filenamelist = [ "baryon_qcdsf.lst" ]
+# for filename in filenamelist:
+#     output = filename[:-4]+"/"
+#     with open(filename,'r') as f:
+#         config_list = [line.strip() for line in f]
+#     config_list.sort()
+#     ub.unpack_barspec_FH(
+#         config_list,
+#         loc="./"+output,
+#         momdict=momdict
+#     )
