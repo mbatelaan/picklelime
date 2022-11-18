@@ -2,32 +2,26 @@ from pathlib import Path
 import sys
 
 import ../unpack_bar3ptfn as ub
+from util import read_config
 
 
+if len(sys.argv) == 2:
+    config = read_config(sys.argv[1])
+else:
+    print("no config yaml given")
 
-momdict = {
-    [0, 0, 0]: [
-        [0, 0, 0],
-        [1, 0, 0],
-        [0, 1, 0],
-        [1, 1, 0],
-        [1, 1, 1],
-        [2, 0, 0],
-        [0, 2, 0],
-        [2, 1, 0],
-    ],
-}
-filenamelist = [ "bar3ptfn_t13_U.lst", "bar3ptfn_t13_D.lst"]
-
-for filename in filenamelist:
+output_dir = Path(config["savelocation"] + output)
+output_dir.mkdir(parents=True, exist_ok=True)
+    
+for filename in config["filenamelist"]:
     output = filename[:-4]+"/"
     with open(filename,'r') as f:
         config_list = [line.strip() for line in f]
     config_list.sort()
     ub.unpack_bar3ptfn(
         config_list,
-        loc="./"+output,
-        momdict=momdict
+        loc= output_dir,
+        momdict=config["momdict"]
     )
 
         
