@@ -1,11 +1,11 @@
 # %%
 import numpy as np
 import xml.etree.ElementTree as ET
-import core_functions as cf
 import os
 import pickle as pickle
 import collections
 
+import picklelime.core_functions as cf
 
 magic_bytes = b"Eg\x89\xab"
 Nd = 4
@@ -20,7 +20,9 @@ Nd = 4
 # NOTE simplify overrides transition_form
 
 
-def unpack_bar3ptfn(filelist_iter, loc=".", transition_form=False, simplify=False, momdict=None):
+def unpack_bar3ptfn(
+    filelist_iter, loc=".", transition_form=False, simplify=False, momdict=None
+):
     data = rec_dd()
     data_trev = rec_dd()
 
@@ -279,7 +281,7 @@ def unpack_bar3ptfn(filelist_iter, loc=".", transition_form=False, simplify=Fals
         root = tree.getroot()
 
         deriv = int(root.find("deriv").text)
-        num_form_fac = 16 * (4 ** deriv)
+        num_form_fac = 16 * (4**deriv)
 
         head, record = cf.ReadRecord(file_in)
 
@@ -300,8 +302,11 @@ def unpack_bar3ptfn(filelist_iter, loc=".", transition_form=False, simplify=Fals
 
                 for n_mom, mom in enumerate(mom_list):
                     # Check whether momdict exists and whether the current momentum is included in momdict
-                    if momdict == None or ((sink_moms[n_seq] in momdict) and (mom in momdict[sink_moms[n_seq]])):
-                    # if (momdict == None or (mom in momdict[])) :
+                    if momdict == None or (
+                        (sink_moms[n_seq] in momdict)
+                        and (mom in momdict[sink_moms[n_seq]])
+                    ):
+                        # if (momdict == None or (mom in momdict[])) :
                         # print(f"sink_mom =  {sink_moms[n_seq]}")
                         # print(f"\nn_seq = {n_seq}")
 
@@ -323,13 +328,13 @@ def unpack_bar3ptfn(filelist_iter, loc=".", transition_form=False, simplify=Fals
                             )
                             == 0
                         ):
-                            data[latt_size_str][ferm_act_string][κ_str][source_sink_string][
-                                seq
-                            ][mom_str][form_fac_str] = [record_sliced]
+                            data[latt_size_str][ferm_act_string][κ_str][
+                                source_sink_string
+                            ][seq][mom_str][form_fac_str] = [record_sliced]
                         else:
-                            data[latt_size_str][ferm_act_string][κ_str][source_sink_string][
-                                seq
-                            ][mom_str][form_fac_str].append(record_sliced)
+                            data[latt_size_str][ferm_act_string][κ_str][
+                                source_sink_string
+                            ][seq][mom_str][form_fac_str].append(record_sliced)
 
     for latt_size, lvl1 in data.items():
         for ferm_act, lvl2 in lvl1.items():
@@ -418,6 +423,7 @@ def γString(n):
     ]
     return names[n]
 
+
 def γString_euclidean(n):
     names = [
         "gI",
@@ -438,6 +444,7 @@ def γString_euclidean(n):
         "g5",
     ]
     return names[n]
+
 
 def γString_chroma(n):
     names = [

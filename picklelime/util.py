@@ -12,7 +12,7 @@ from pathlib import Path
 
 import yaml
 
-from gevpanalysis.definitions import PROJECT_BASE_DIRECTORY
+from picklelime.definitions import PROJECT_BASE_DIRECTORY
 
 
 def find_file(*args, **kwargs):
@@ -35,9 +35,7 @@ def read_config(name):
 
 def run_command(command):
     """Run shell command in project directory and capture output."""
-    process = subprocess.run(
-        command, cwd=find_file(), stdout=subprocess.PIPE
-    )
+    process = subprocess.run(command, cwd=find_file(), stdout=subprocess.PIPE)
     return process.stdout.decode("utf8").strip()
 
 
@@ -54,6 +52,7 @@ def get_last_commit_date():
 def make_description():
     """Create a string including the script name and git info."""
     import __main__
+
     script = Path(__main__.__file__).resolve()  # get script name
     git_hash = get_git_hash()
     date = get_last_commit_date()
