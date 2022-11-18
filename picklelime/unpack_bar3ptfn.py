@@ -101,7 +101,8 @@ def unpack_bar3ptfn(
         # print(seqsrc_type)
 
         sink_moms = [
-            [int(i) for i in str(x.find("sink_mom").text).split(" ")]
+            FormatMom([int(i) for i in str(x.find("sink_mom").text).split(" ")])
+            # [int(i) for i in str(x.find("sink_mom").text).split(" ")]
             # FormatMom(str(x.find("sink_mom").text).split(" "))
             # "".join([f"{int(i):+}" for i in str(x.find("sink_mom").text).split(" ")])
             for x in seqsrc

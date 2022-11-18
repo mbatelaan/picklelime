@@ -3,22 +3,23 @@ import sys
 
 import picklelime.unpack_bar3ptfn as ub
 from picklelime.util import read_config
+from picklelime.util import find_file
 
 
 if len(sys.argv) == 2:
     config = read_config(sys.argv[1])
 else:
     print("no config yaml given")
+    exit()
 
-output_dir = Path(config["savelocation"] + output)
-output_dir.mkdir(parents=True, exist_ok=True)
 
 for filename in config["filenamelist"]:
     output = filename[:-4] + "/"
-    filename_loc = find_file("config", filenamename)
-    print(filename_loc)
-    exit()
-    with open(filename, "r") as f:
+    output_dir = Path(config["savelocation"] + output)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    filename_loc = find_file("config", config["lattice_name"], filename)
+    # print(filename_loc)
+    with open(filename_loc, "r") as f:
         config_list = [line.strip() for line in f]
     config_list.sort()
     ub.unpack_bar3ptfn(config_list, loc=output_dir, momdict=config["momdict"])
