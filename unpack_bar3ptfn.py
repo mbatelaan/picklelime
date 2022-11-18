@@ -90,14 +90,18 @@ def unpack_bar3ptfn(filelist_iter, loc=".", transition_form=False, simplify=Fals
                 (int(x.find("t_sink").text) - int(x.find("t_source").text))
                 % latt_size[3]
             )
-            + "_p"
-            + str(x.find("sink_mom").text).replace(" ", "_")
+            + "_"
+            # + FormatMom(str(x.find("sink_mom").text).split(" "))
+            + FormatMom([int(i) for i in str(x.find("sink_mom").text).split(" ")])
+            # + "".join([f"{int(i):+}" for i in str(x.find("sink_mom").text).split(" ")])
             for x in seqsrc
         ]
         # print(seqsrc_type)
 
         sink_moms = [
-            str(x.find("sink_mom").text).replace(" ", "_")
+            [int(i) for i in str(x.find("sink_mom").text).split(" ")]
+            # FormatMom(str(x.find("sink_mom").text).split(" "))
+            # "".join([f"{int(i):+}" for i in str(x.find("sink_mom").text).split(" ")])
             for x in seqsrc
         ]
         # print(sink_moms)
@@ -411,5 +415,47 @@ def γString(n):
         "g51",
         "g05",
         "g5",
+    ]
+    return names[n]
+
+def γString_euclidean(n):
+    names = [
+        "gI",
+        "g1",
+        "g2",
+        "g12",
+        "g3",
+        "g13",
+        "g23",
+        "g54",
+        "g4",
+        "g14",
+        "g24",
+        "g35",
+        "g34",
+        "g52",
+        "g15",
+        "g5",
+    ]
+    return names[n]
+
+def γString_chroma(n):
+    names = [
+        "g0",
+        "g1",
+        "g2",
+        "g3",
+        "g4",
+        "g5",
+        "g6",
+        "g7",
+        "g8",
+        "g9",
+        "g10",
+        "g11",
+        "g12",
+        "g13",
+        "g14",
+        "g15",
     ]
     return names[n]

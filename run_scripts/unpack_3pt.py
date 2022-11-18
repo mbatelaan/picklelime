@@ -1,8 +1,12 @@
-import unpack_bar3ptfn as ub
 from pathlib import Path
+import sys
+
+import ../unpack_bar3ptfn as ub
+
+
 
 momdict = {
-    "0_0_0": [
+    [0, 0, 0]: [
         [0, 0, 0],
         [1, 0, 0],
         [0, 1, 0],
