@@ -1,10 +1,8 @@
 import unpack_bar3ptfn as ub
 from pathlib import Path
 
-filenamelist = [ "bar3ptfn_t10.lst", "bar3ptfn_t13.lst", "bar3ptfn_t16.lst" ]
-
 momdict = {
-    "": [
+    "0_0_0": [
         [0, 0, 0],
         [1, 0, 0],
         [0, 1, 0],
@@ -15,18 +13,19 @@ momdict = {
         [2, 1, 0],
     ],
 }
+filenamelist = [ "bar3ptfn_t13_U.lst", "bar3ptfn_t13_D.lst"]
 
 for filename in filenamelist:
     output = filename[:-4]+"/"
     with open(filename,'r') as f:
         config_list = [line.strip() for line in f]
-        config_list.sort()
-        ub.unpack_bar3ptfn(
-            config_list,
-            loc="./"+output,
-            # momdict=momdict
-        )
-        
+    config_list.sort()
+    ub.unpack_bar3ptfn(
+        config_list,
+        loc="./"+output,
+        momdict=momdict
+    )
+
         
 # filelist = [ [[str(limedir)+'/' + config + ending + sink + '.lime' for config in config_list] for ending in file_endings] for sink in file_sinks]
 # print(filelist[0][0])

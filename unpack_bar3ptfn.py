@@ -20,11 +20,12 @@ Nd = 4
 # NOTE simplify overrides transition_form
 
 
-def unpack_bar3ptfn(filelist_iter, loc=".", transition_form=False, simplify=False):
+def unpack_bar3ptfn(filelist_iter, loc=".", transition_form=False, simplify=False, momdict=None):
     data = rec_dd()
     data_trev = rec_dd()
 
-    for filename in filelist_iter:
+    for ifile, filename in enumerate(filelist_iter):
+        print(f"file {ifile}/{len(filelist_iter)}")
         file_in = open(filename, "rb")
         head, record = cf.ReadRecord(file_in)
         if head[:4] != magic_bytes:
@@ -55,6 +56,7 @@ def unpack_bar3ptfn(filelist_iter, loc=".", transition_form=False, simplify=Fals
             root.find("bar3ptfn").find("Input").find("Param").find("mom2_max").text
         )
         num_mom, mom_list = cf.CountMom(mom2_max, Nd)
+        # print(num_mom)
 
         seqsrc = (
             root.find("bar3ptfn")
@@ -62,8 +64,22 @@ def unpack_bar3ptfn(filelist_iter, loc=".", transition_form=False, simplify=Fals
             .find("Sequential_source")
             .findall("elem")
         )
+        # print(seqsrc)
 
         num_seqsrc = len(seqsrc)
+        # print(num_seqsrc)
+
+        # seqsrc_type = [
+        #     x.find("seqsrc_type").text
+        #     + "_"
+        #     + γString(int(x.find("gamma_insertion").text))
+        #     + "_t"
+        #     + str(
+        #         (int(x.find("t_sink").text) - int(x.find("t_source").text))
+        #         % latt_size[3]
+        #     )
+        #     for x in seqsrc
+        # ]
 
         seqsrc_type = [
             x.find("seqsrc_type").text
@@ -74,8 +90,17 @@ def unpack_bar3ptfn(filelist_iter, loc=".", transition_form=False, simplify=Fals
                 (int(x.find("t_sink").text) - int(x.find("t_source").text))
                 % latt_size[3]
             )
+            + "_p"
+            + str(x.find("sink_mom").text).replace(" ", "_")
             for x in seqsrc
         ]
+        # print(seqsrc_type)
+
+        sink_moms = [
+            str(x.find("sink_mom").text).replace(" ", "_")
+            for x in seqsrc
+        ]
+        # print(sink_moms)
 
         forward_props = (
             root.find("bar3ptfn")
@@ -262,37 +287,45 @@ def unpack_bar3ptfn(filelist_iter, loc=".", transition_form=False, simplify=Fals
         )
 
         for n_seq, seq in enumerate(seqsrc_type):
+            # print(f"n_seq = {n_seq}")
+            # print(f"sink_mom =  {sink_moms[n_seq]}")
             κ_str = κ_string[n_seq]
 
             for n_form_fac in range(num_form_fac):
                 form_fac_str = format_form_fac(n_form_fac, deriv)
 
                 for n_mom, mom in enumerate(mom_list):
-                    mom_str = FormatMom(mom)
+                    # Check whether momdict exists and whether the current momentum is included in momdict
+                    if momdict == None or ((sink_moms[n_seq] in momdict) and (mom in momdict[sink_moms[n_seq]])):
+                    # if (momdict == None or (mom in momdict[])) :
+                        # print(f"sink_mom =  {sink_moms[n_seq]}")
+                        # print(f"\nn_seq = {n_seq}")
 
-                    record_sliced = record[n_seq, n_form_fac, n_mom]
+                        mom_str = FormatMom(mom)
 
-                    if (
-                        type(
-                            data[latt_size_str][ferm_act_string][κ_str][
-                                source_sink_string
-                            ][seq][mom_str][form_fac_str]
-                        )
-                        == collections.defaultdict
-                        and len(
-                            data[latt_size_str][ferm_act_string][κ_str][
-                                source_sink_string
-                            ][seq][mom_str][form_fac_str].keys()
-                        )
-                        == 0
-                    ):
-                        data[latt_size_str][ferm_act_string][κ_str][source_sink_string][
-                            seq
-                        ][mom_str][form_fac_str] = [record_sliced]
-                    else:
-                        data[latt_size_str][ferm_act_string][κ_str][source_sink_string][
-                            seq
-                        ][mom_str][form_fac_str].append(record_sliced)
+                        record_sliced = record[n_seq, n_form_fac, n_mom]
+
+                        if (
+                            type(
+                                data[latt_size_str][ferm_act_string][κ_str][
+                                    source_sink_string
+                                ][seq][mom_str][form_fac_str]
+                            )
+                            == collections.defaultdict
+                            and len(
+                                data[latt_size_str][ferm_act_string][κ_str][
+                                    source_sink_string
+                                ][seq][mom_str][form_fac_str].keys()
+                            )
+                            == 0
+                        ):
+                            data[latt_size_str][ferm_act_string][κ_str][source_sink_string][
+                                seq
+                            ][mom_str][form_fac_str] = [record_sliced]
+                        else:
+                            data[latt_size_str][ferm_act_string][κ_str][source_sink_string][
+                                seq
+                            ][mom_str][form_fac_str].append(record_sliced)
 
     for latt_size, lvl1 in data.items():
         for ferm_act, lvl2 in lvl1.items():
