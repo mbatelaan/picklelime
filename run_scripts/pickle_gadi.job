@@ -1,0 +1,30 @@
+#!/bin/bash 
+#PBS -N pickle
+#PBS -l walltime=4:00:00
+#PBS -l ncpus=1
+#PBS -q express
+#PBS -P e31
+#PBS -l wd
+#PBS -l jobfs=200GB
+#PBS -l mem=160GB
+#PBS -l storage=scratch/e31
+# run job
+
+umask 022
+
+start_time=$(date +%M)
+echo "job start date: $(date)"
+
+module purge
+module load python3
+
+launchdir=$PBS_O_WORKDIR
+echo $launchdir
+
+python3 unpack_3pt.py b5p50kp120900kp120900
+
+end_time=$(date +%M)
+echo "job end date: $(date)"
+
+#-------------------------------------------------------------------------------
+

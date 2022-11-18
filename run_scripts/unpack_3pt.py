@@ -16,13 +16,14 @@ else:
 for filename in config["filenamelist"]:
     output = filename[:-4] + "/"
     output_dir = Path(config["savelocation"] + output)
+    print(str(output_dir))
     output_dir.mkdir(parents=True, exist_ok=True)
     filename_loc = find_file("config", config["lattice_name"], filename)
     # print(filename_loc)
     with open(filename_loc, "r") as f:
         config_list = [line.strip() for line in f]
     config_list.sort()
-    ub.unpack_bar3ptfn(config_list, loc=output_dir, momdict=config["momdict"])
+    ub.unpack_bar3ptfn(config_list, loc=str(output_dir), momdict=config["momdict"])
 
 
 # filelist = [ [[str(limedir)+'/' + config + ending + sink + '.lime' for config in config_list] for ending in file_endings] for sink in file_sinks]
