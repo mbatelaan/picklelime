@@ -23,7 +23,7 @@ for filename in config["filenamelist_meson"]:
     with open(filename_loc, "r") as f:
         config_list = [line.strip() for line in f]
     config_list.sort()
-    ub.unpack_messpec_FH(config_list, loc=str(output_dir), momdict=config["momdict"])
+    ub.unpack_messpec_FH(config_list, loc=str(output_dir), momdict=config["momdict"], small=True)
 
 
 # momdict = {

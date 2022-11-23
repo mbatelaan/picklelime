@@ -15,7 +15,8 @@ echo "job start date: $(date)"
 
 module load anaconda3/2019.10
 
-python -u unpack_mesons.py b5p80kp122810kp122810 > messpec_job.out
+# python -u unpack_mesons.py b5p80kp122880kp122670 > messpec_job2.out
+python -u unpack_mesons.py b5p80kp122940kp122551 > messpec_job3.out
 
 end_time=$(date +%M)
 echo "job end date: $(date)"

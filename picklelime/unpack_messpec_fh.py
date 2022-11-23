@@ -11,6 +11,7 @@ import gc
 import pickle as pickle
 import collections
 from psutil import virtual_memory
+from pathlib import Path
 import picklelime.core_functions as cf
 
 magic_bytes = b"Eg\x89\xab"
@@ -357,7 +358,7 @@ def readlimefile(
     return data, datasets, filenumber
 
 
-def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
+def unpack_messpec_FH(filelist_iter, loc=".", momdict=None, small=False):
     """Unpack messpec files which includ propagators with Feynman-Hellmann perturbations to the action.
 
     This works very similarly to the unpack_messpec function but it has two added levels which it loops over, the feynhell operator and the feynhell parameters (lambdas). It also takes a dictionary as input which can specify the momentum values to be unpacked for each feynhellopstring.
@@ -372,29 +373,11 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
 
     filenumber = 0
     datasets = 0
-    gamma_combinations = [
-        [15, 15],
-        [15, 7],
-        [7, 15],
-        [7, 7],
-        [1, 1],
-        [1, 2],
-        [1, 4],
-        [1, 8],
-        [2, 1],
-        [2, 2],
-        [2, 4],
-        [2, 8],
-        [4, 1],
-        [4, 2],
-        [4, 4],
-        [4, 8],
-        [8, 1],
-        [8, 2],
-        [8, 4],
-        [8, 8],
-    ]
-
+    if small:
+        gamma_combinations = gammaCombinations()
+    else: 
+        gamma_combinations = None
+    
     # Reading in the data by opening each file in turn
     print("reading limes")
     for ifile, filename in enumerate(filelist_iter):
@@ -402,13 +385,14 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
         # print("datasets = ",datasets)
         # print("filenumber = ",filenumber)
         data, datasets, filenumber = readlimefile(
-            filename, data, momdict, datasets, filenumber
+            filename, data, momdict, datasets, filenumber, gamma_combinations=gamma_combinations
         )
 
     print(f"datasets = {int(datasets)}")
     print(f"filenumber = {int(filenumber)}")
     # print(f"configuration number = {int(datasets/filenumber)}")
-    print(43 * "-" + f"\n\twriting {int(filenumber)} pickle files\n" + 43 * "-")
+    # print(43 * "-" + f"\n\twriting {int(filenumber)} pickle files\n" + 43 * "-")
+    print(43 * "-" + f"\n\twriting {int(filenumber)/(16*16)} pickle files\n" + 43 * "-")
 
     counter = 0
     for latt_size, lvl1 in data.items():
@@ -424,7 +408,9 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
                                     + f"/{source_sink}/{p}/"
                                 )
 
-                                os.system(f"mkdir -p {out_dir}")
+                                # os.system(f"mkdir -p {out_dir}")
+                                output_directory = Path(out_dir)
+                                output_directory.mkdir(parents=True, exist_ok=True)
 
                                 # Save all mesons in one big file
                                 ncfg = len(list(lvl7.values())[0])
@@ -469,7 +455,7 @@ def smearing_names(name):
     return names[name]
 
 
-def gammaCombinations(n):
+def gammaCombinations():
     combinations = [
         [15, 15],
         [15, 7],
@@ -492,7 +478,7 @@ def gammaCombinations(n):
         [8, 4],
         [8, 8],
     ]
-    return combinations[n]
+    return combinations
 
 
 def gammaString(n):
