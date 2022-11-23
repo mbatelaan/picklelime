@@ -398,9 +398,9 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
     # Reading in the data by opening each file in turn
     print("reading limes")
     for ifile, filename in enumerate(filelist_iter):
-        print(f"\nfile {ifile}/{len(filelist_iter)}")
-        print("datasets = ",datasets)
-        print("filenumber = ",filenumber)
+        print(f"file {ifile}/{len(filelist_iter)}")
+        # print("datasets = ",datasets)
+        # print("filenumber = ",filenumber)
         data, datasets, filenumber = readlimefile(
             filename, data, momdict, datasets, filenumber
         )
