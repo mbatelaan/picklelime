@@ -40,7 +40,8 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
         latt_size_str = "x".join(
             str(x) for x in latt_size if not (x in seen or seen.add(x))
         )
-        # time_rev = root.find("Input").find("Param").find("time_rev").text == "true"
+        time_rev = root.find("Input").find("Param").find("time_rev").text == "true"
+        print("\n\ntime_rev = ", time_rev)
         # Fix time-rev to false for now
         time_rev = False
 
@@ -349,9 +350,9 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
 
 
 def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
-    """Unpack barspec files which includ propagators with Feynman-Hellmann perturbations to the action.
+    """Unpack messpec files which includ propagators with Feynman-Hellmann perturbations to the action.
 
-    This works very similarly to the unpack_barspec function but it has two added levels which it loops over, the feynhell operator and the feynhell parameters (lambdas). It also takes a dictionary as input which can specify the momentum values to be unpacked for each feynhellopstring.
+    This works very similarly to the unpack_messpec function but it has two added levels which it loops over, the feynhell operator and the feynhell parameters (lambdas). It also takes a dictionary as input which can specify the momentum values to be unpacked for each feynhellopstring.
     """
     data = rec_dd()
     data_trev = rec_dd()
@@ -387,47 +388,25 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
                             for p, lvl7 in lvl6.items():
                                 out_dir = (
                                     loc
-                                    + f"/barspec/{latt_size}/{ferm_act}/{kappa}/{op_val}/{lmb_val}"
+                                    + f"/messpec/{latt_size}/{ferm_act}/{kappa}/{op_val}/{lmb_val}"
                                     + f"/{source_sink}/{p}/"
                                 )
 
                                 os.system(f"mkdir -p {out_dir}")
 
-                                for b, lvl8 in lvl7.items():
-                                    counter += 1
+                                ncfg = len(lvl7.item()[0])
+                                out_name = f"messpec_full_{ncfg}cfgs.pickle"
+                                print("np.shape(lvl7.items())")
+                                with open(out_dir + out_name, "wb") as file_out:
+                                    pickle.dump(np.array(lvl7), file_out)
+
+                                for mes, lvl8 in lvl7.items():
+                                    # counter += 1
                                     ncfg = len(lvl8)
-                                    out_name = f"barspec_{b}_{ncfg}cfgs.pickle"
+                                    out_name = f"messpec_{mes}_{ncfg}cfgs.pickle"
                                     with open(out_dir + out_name, "wb") as file_out:
                                         pickle.dump(np.array(lvl8), file_out)
 
-    if time_rev:
-        # print("\n", 40 * "-" + "\n\ttime rev\n" + 40 * "-")
-        # print("\n", "\ntime rev")
-        counter = 0
-        for latt_size, lvl1 in data_trev.items():
-            for ferm_act, lvl2 in lvl1.items():
-                for kappa, lvl3 in lvl2.items():
-                    for op_val, lvl4 in lvl3.items():
-                        for lmb_val, lvl5 in lvl4.items():
-                            for source_sink, lvl6 in lvl5.items():
-                                for p, lvl7 in lvl6.items():
-                                    out_dir = (
-                                        loc
-                                        + f"/barspec/{latt_size}/{ferm_act}/{kappa}/{op_val}/{lmb_val}"
-                                        + f"/{source_sink}/{p}/"
-                                    )
-
-                                    os.system(f"mkdir -p {out_dir}")
-
-                                    for b, lvl8 in lvl7.items():
-                                        counter += 1
-                                        ncfg = len(lvl8)
-                                        out_name = (
-                                            f"barspec_{b}_timerev_{ncfg}cfgs.pickle"
-                                        )
-                                        with open(out_dir + out_name, "wb") as file_out:
-                                            pickle.dump(np.array(lvl8), file_out)
-    # print("\n")
     process = psutil.Process()
     print(process.memory_info().rss / 1024**2)  # in bytes
     return
@@ -450,6 +429,32 @@ def sink_names(name):
 def smearing_names(name):
     names = {"gauge_inv_jacobi": "gij"}
     return names[name]
+
+
+def gammaCombinations(n):
+    combinations = [
+        [15, 15],
+        [15, 7],
+        [7, 15],
+        [7, 7],
+        [1, 1],
+        [1, 2],
+        [1, 4],
+        [1, 8],
+        [2, 1],
+        [2, 2],
+        [2, 4],
+        [2, 8],
+        [4, 1],
+        [4, 2],
+        [4, 4],
+        [4, 8],
+        [8, 1],
+        [8, 2],
+        [8, 4],
+        [8, 8],
+    ]
+    return combinations[n]
 
 
 def gammaString(n):
