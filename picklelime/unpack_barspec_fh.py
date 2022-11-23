@@ -10,7 +10,7 @@ import gc
 import pickle as pickle
 import collections
 from psutil import virtual_memory
-import core_functions as cf
+import picklelime.core_functions as cf
 
 magic_bytes = b"Eg\x89\xab"
 Nd = 4
@@ -110,7 +110,7 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
                 .find("FermAct")
                 .text.lower()
             )
-            print(ferm_act_string_1, ferm_act_string_2)
+            # print(ferm_act_string_1, ferm_act_string_2)
 
             feynhellopstring = ""
             feynhellstring = ""
@@ -305,6 +305,7 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
 
             for n, p in enumerate(mom_list):
                 # Check whether momdict exists and whether the current momentum is included in momdict
+                # print(feynhellopstring)
                 if momdict == None or ((feynhellopstring in momdict) and (p in momdict[feynhellopstring])):
                     p_str = "p" + "".join([f"{p_i:+d}" for p_i in p])
                     for b in range(baryon_number):
@@ -436,12 +437,15 @@ def unpack_barspec_FH(filelist_iter, loc=".", momdict=None):
     datasets = 0
     # Reading in the data by opening each file in turn
     print("reading limes")
-    for filename in filelist_iter:
+    for ifile, filename in enumerate(filelist_iter):
+        print(f"file {ifile}/{len(filelist_iter)}")
         data, data_trev, time_rev, datasets, filenumber = readlimefile(
             filename, data, data_trev, momdict, datasets, filenumber
         )
 
-    print(f"configuration number = {int(datasets/filenumber)}")
+    print(f"datasets = {int(datasets)}")
+    print(f"filenumber = {int(filenumber)}")
+    # print(f"configuration number = {int(datasets/filenumber)}")
     print(43 * "-" + f"\n\twriting {int(filenumber)} pickle files\n" + 43 * "-")
 
     counter = 0
@@ -469,7 +473,7 @@ def unpack_barspec_FH(filelist_iter, loc=".", momdict=None):
 
     if time_rev:
         # print("\n", 40 * "-" + "\n\ttime rev\n" + 40 * "-")
-        print("\n", "\ntime rev")
+        # print("\n", "\ntime rev")
         counter = 0
         for latt_size, lvl1 in data_trev.items():
             for ferm_act, lvl2 in lvl1.items():
@@ -494,7 +498,7 @@ def unpack_barspec_FH(filelist_iter, loc=".", momdict=None):
                                         )
                                         with open(out_dir + out_name, "wb") as file_out:
                                             pickle.dump(np.array(lvl8), file_out)
-    print("\n")
+    # print("\n")
     process = psutil.Process()
     print(process.memory_info().rss / 1024 ** 2)  # in bytes
     return
