@@ -62,7 +62,7 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
 
             # baryon_number = int(root.find("baryon-number").text)
 
-            κ1 = float(
+            kappa1 = float(
                 root.find("Forward_prop_headers")
                 .find("First_forward_prop")
                 .find("ForwardProp")
@@ -70,7 +70,7 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
                 .find("Kappa")
                 .text
             )
-            κ2 = float(
+            kappa2 = float(
                 root.find("Forward_prop_headers")
                 .find("Second_forward_prop")
                 .find("ForwardProp")
@@ -79,11 +79,11 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
                 .text
             )
 
-            κ_str = (
+            kappa_str = (
                 "k"
-                + f"{κ1:.6f}".lstrip("0").replace(".", "p")
+                + f"{kappa1:.6f}".lstrip("0").replace(".", "p")
                 + "k"
-                + f"{κ2:.6f}".lstrip("0").replace(".", "p")
+                + f"{kappa2:.6f}".lstrip("0").replace(".", "p")
             )
 
             ferm_act_string_1 = (
@@ -301,37 +301,39 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
                     (feynhellopstring in momdict) and (p in momdict[feynhellopstring])
                 ):
                     p_str = "p" + "".join([f"{p_i:+d}" for p_i in p])
-                    for γ1, γ2 in itertools.product(range(16), range(16)):
+                    for gamma1, gamma2 in itertools.product(range(16), range(16)):
 
-                        γ_str = f"{γString(γ1)}-{γString(γ2)}"
-                        record_sliced = record[γ1, γ2, n]
+                        gamma_str = f"{gammaString(gamma1)}-{gammaString(gamma2)}"
+                        record_sliced = record[gamma1, gamma2, n]
                         if (
                             type(
-                                data[latt_size_str][ferm_act_string][κ_str][
+                                data[latt_size_str][ferm_act_string][kappa_str][
                                     feynhellopstring
-                                ][feynhellstring][source_sink_string][p_str][γ_str]
+                                ][feynhellstring][source_sink_string][p_str][gamma_str]
                             )
                             == collections.defaultdict
                             and len(
-                                data[latt_size_str][ferm_act_string][κ_str][
+                                data[latt_size_str][ferm_act_string][kappa_str][
                                     feynhellopstring
                                 ][feynhellstring][source_sink_string][p_str][
-                                    γ_str
+                                    gamma_str
                                 ].keys()
                             )
                             == 0
                         ):
-                            data[latt_size_str][ferm_act_string][κ_str][
+                            data[latt_size_str][ferm_act_string][kappa_str][
                                 feynhellopstring
-                            ][feynhellstring][source_sink_string][p_str][γ_str] = [
+                            ][feynhellstring][source_sink_string][p_str][gamma_str] = [
                                 record_sliced
                             ]
                             datasets += 1
                             filenumber += 1
                         else:
-                            data[latt_size_str][ferm_act_string][κ_str][
+                            data[latt_size_str][ferm_act_string][kappa_str][
                                 feynhellopstring
-                            ][feynhellstring][source_sink_string][p_str][γ_str].append(
+                            ][feynhellstring][source_sink_string][p_str][
+                                gamma_str
+                            ].append(
                                 record_sliced
                             )
                             datasets += 1
@@ -378,14 +380,14 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
     counter = 0
     for latt_size, lvl1 in data.items():
         for ferm_act, lvl2 in lvl1.items():
-            for κ, lvl3 in lvl2.items():
+            for kappa, lvl3 in lvl2.items():
                 for op_val, lvl4 in lvl3.items():
                     for lmb_val, lvl5 in lvl4.items():
                         for source_sink, lvl6 in lvl5.items():
                             for p, lvl7 in lvl6.items():
                                 out_dir = (
                                     loc
-                                    + f"/barspec/{latt_size}/{ferm_act}/{κ}/{op_val}/{lmb_val}"
+                                    + f"/barspec/{latt_size}/{ferm_act}/{kappa}/{op_val}/{lmb_val}"
                                     + f"/{source_sink}/{p}/"
                                 )
 
@@ -404,14 +406,14 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
         counter = 0
         for latt_size, lvl1 in data_trev.items():
             for ferm_act, lvl2 in lvl1.items():
-                for κ, lvl3 in lvl2.items():
+                for kappa, lvl3 in lvl2.items():
                     for op_val, lvl4 in lvl3.items():
                         for lmb_val, lvl5 in lvl4.items():
                             for source_sink, lvl6 in lvl5.items():
                                 for p, lvl7 in lvl6.items():
                                     out_dir = (
                                         loc
-                                        + f"/barspec/{latt_size}/{ferm_act}/{κ}/{op_val}/{lmb_val}"
+                                        + f"/barspec/{latt_size}/{ferm_act}/{kappa}/{op_val}/{lmb_val}"
                                         + f"/{source_sink}/{p}/"
                                     )
 
@@ -450,7 +452,7 @@ def smearing_names(name):
     return names[name]
 
 
-def γString(n):
+def gammaString(n):
     names = [
         "gI",
         "g0",
