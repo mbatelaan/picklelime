@@ -17,7 +17,9 @@ magic_bytes = b"Eg\x89\xab"
 Nd = 4
 
 
-def readlimefile(filename, data, momdict, datasets, filenumber):
+def readlimefile(
+    filename, data, momdict, datasets, filenumber, gamma_combinations=None
+):
     with open(filename, "rb") as file_in:
         head, record = cf.ReadRecord(file_in)
         # print("size =", sys.getsizeof(record) / 1024)
@@ -303,41 +305,47 @@ def readlimefile(filename, data, momdict, datasets, filenumber):
                 ):
                     p_str = "p" + "".join([f"{p_i:+d}" for p_i in p])
                     for gamma1, gamma2 in itertools.product(range(16), range(16)):
-
-                        gamma_str = f"{gammaString(gamma1)}-{gammaString(gamma2)}"
-                        record_sliced = record[gamma1, gamma2, n]
-                        if (
-                            type(
-                                data[latt_size_str][ferm_act_string][kappa_str][
-                                    feynhellopstring
-                                ][feynhellstring][source_sink_string][p_str][gamma_str]
-                            )
-                            == collections.defaultdict
-                            and len(
+                        if (gamma_combinations == None) or (
+                            [gamma1, gamma2] in gamma_combinations
+                        ):
+                            gamma_str = f"{gammaString(gamma1)}-{gammaString(gamma2)}"
+                            record_sliced = record[gamma1, gamma2, n]
+                            if (
+                                type(
+                                    data[latt_size_str][ferm_act_string][kappa_str][
+                                        feynhellopstring
+                                    ][feynhellstring][source_sink_string][p_str][
+                                        gamma_str
+                                    ]
+                                )
+                                == collections.defaultdict
+                                and len(
+                                    data[latt_size_str][ferm_act_string][kappa_str][
+                                        feynhellopstring
+                                    ][feynhellstring][source_sink_string][p_str][
+                                        gamma_str
+                                    ].keys()
+                                )
+                                == 0
+                            ):
                                 data[latt_size_str][ferm_act_string][kappa_str][
                                     feynhellopstring
                                 ][feynhellstring][source_sink_string][p_str][
                                     gamma_str
-                                ].keys()
-                            )
-                            == 0
-                        ):
-                            data[latt_size_str][ferm_act_string][kappa_str][
-                                feynhellopstring
-                            ][feynhellstring][source_sink_string][p_str][gamma_str] = [
-                                record_sliced
-                            ]
-                            datasets += 1
-                            filenumber += 1
-                        else:
-                            data[latt_size_str][ferm_act_string][kappa_str][
-                                feynhellopstring
-                            ][feynhellstring][source_sink_string][p_str][
-                                gamma_str
-                            ].append(
-                                record_sliced
-                            )
-                            datasets += 1
+                                ] = [
+                                    record_sliced
+                                ]
+                                datasets += 1
+                                filenumber += 1
+                            else:
+                                data[latt_size_str][ferm_act_string][kappa_str][
+                                    feynhellopstring
+                                ][feynhellstring][source_sink_string][p_str][
+                                    gamma_str
+                                ].append(
+                                    record_sliced
+                                )
+                                datasets += 1
                     else:
                         None
 
@@ -364,6 +372,29 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
 
     filenumber = 0
     datasets = 0
+    gamma_combinations = [
+        [15, 15],
+        [15, 7],
+        [7, 15],
+        [7, 7],
+        [1, 1],
+        [1, 2],
+        [1, 4],
+        [1, 8],
+        [2, 1],
+        [2, 2],
+        [2, 4],
+        [2, 8],
+        [4, 1],
+        [4, 2],
+        [4, 4],
+        [4, 8],
+        [8, 1],
+        [8, 2],
+        [8, 4],
+        [8, 8],
+    ]
+
     # Reading in the data by opening each file in turn
     print("reading limes")
     for ifile, filename in enumerate(filelist_iter):
