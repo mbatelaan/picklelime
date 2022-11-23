@@ -3,7 +3,7 @@
 #SBATCH -N 1
 #SBATCH --ntasks=1
 #SBATCH --tasks-per-node 1
-#SBATCH -p standard96
+#SBATCH -p large96
 #SBATCH -A hhp00045
 #SBATCH -J picklelime
 
@@ -15,7 +15,7 @@ echo "job start date: $(date)"
 
 module load anaconda3/2019.10
 
-python unpack_mesons.py b5p80kp122810kp122810
+python -u unpack_mesons.py b5p80kp122810kp122810 > messpec_job.out
 
 end_time=$(date +%M)
 echo "job end date: $(date)"

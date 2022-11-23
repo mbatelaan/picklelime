@@ -398,7 +398,9 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
     # Reading in the data by opening each file in turn
     print("reading limes")
     for ifile, filename in enumerate(filelist_iter):
-        print(f"file {ifile}/{len(filelist_iter)}")
+        print(f"\nfile {ifile}/{len(filelist_iter)}")
+        print("datasets = ",datasets)
+        print("filenumber = ",filenumber)
         data, datasets, filenumber = readlimefile(
             filename, data, momdict, datasets, filenumber
         )
@@ -425,7 +427,12 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
                                 os.system(f"mkdir -p {out_dir}")
 
                                 # Save all mesons in one big file
-                                ncfg = len(list(lvl7.items())[0])
+                                ncfg = len(list(lvl7.values())[0])
+                                # print("\n\nshape: ", np.shape(list(lvl7.values())))
+                                # print("shape: ", np.shape(list(lvl7.values())[0]))
+                                # print("shape: ", list(lvl7.values())[0][0])
+                                # print("shape: ", list(lvl7.values())[0][1])
+                                # print("shape: ", np.shape(list(lvl7.values())[0][0][0]))
                                 out_name = f"messpec_full_{ncfg}cfgs.pickle"
                                 with open(out_dir + out_name, "wb") as file_out:
                                     pickle.dump(lvl7, file_out)

@@ -46,6 +46,6 @@ momdict:
       - [0, 0, 0]
 # filenamelist: [ "b5p80kp122810kp122810_000.lst", "b5p80kp122810kp122810_220.lst", "b5p80kp122810kp122810_422.lst", "b5p80kp122810kp122810_442.lst", "b5p80kp122810kp122810_600.lst", "b5p80kp122810kp122810_642.lst"]
 filenamelist: [ "b5p80kp122810kp122810.lst"]
-filenamelist_meson: [ "b5p80kp122810kp122810_meson.lst"]
+filenamelist_meson: [ "b5p80kp122810kp122810_meson_642.lst", "b5p80kp122810kp122810_meson_no642.lst"]
 savelocation: "/scratch/usr/hhpmbate/pickle_files/meson/"
 
