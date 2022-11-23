@@ -44,7 +44,6 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
         # Fix time-rev to false for now
         time_rev = False
 
-
         mom2_max = int(root.find("Input").find("Param").find("mom2_max").text)
         num_mom, mom_list = cf.CountMom(mom2_max, Nd)
 
@@ -188,8 +187,8 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
                 or ferm_act_string_2 == "unprec_slrc_feynhell"
             ):
                 ferm_act_string = "unprec_slrc_feynhell"
-            else :
-                ferm_act_string = ferm_act_string_1+"_"+ferm_act_string_2
+            else:
+                ferm_act_string = ferm_act_string_1 + "_" + ferm_act_string_2
 
             # if ferm_act_string == "clover":
             #     clover_coeff = (
@@ -298,7 +297,9 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
 
             for n, p in enumerate(mom_list):
                 # Check whether momdict exists and whether the current momentum is included in momdict
-                if momdict == None or ((feynhellopstring in momdict) and (p in momdict[feynhellopstring])):
+                if momdict == None or (
+                    (feynhellopstring in momdict) and (p in momdict[feynhellopstring])
+                ):
                     p_str = "p" + "".join([f"{p_i:+d}" for p_i in p])
                     for γ1, γ2 in itertools.product(range(16), range(16)):
 
@@ -306,25 +307,33 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
                         record_sliced = record[γ1, γ2, n]
                         if (
                             type(
-                                    data[latt_size_str][ferm_act_string][κ_str][feynhellopstring][feynhellstring][source_sink_string][p_str][γ_str]
-                                )
+                                data[latt_size_str][ferm_act_string][κ_str][
+                                    feynhellopstring
+                                ][feynhellstring][source_sink_string][p_str][γ_str]
+                            )
                             == collections.defaultdict
-                                and len(
-                                    data[latt_size_str][ferm_act_string][κ_str][feynhellopstring][feynhellstring][
-                                        source_sink_string
-                                    ][p_str][γ_str].keys()
-                                )
+                            and len(
+                                data[latt_size_str][ferm_act_string][κ_str][
+                                    feynhellopstring
+                                ][feynhellstring][source_sink_string][p_str][
+                                    γ_str
+                                ].keys()
+                            )
                             == 0
                         ):
-                            data[latt_size_str][ferm_act_string][κ_str][feynhellopstring][feynhellstring][source_sink_string][
-                                p_str
-                            ][γ_str] = [record_sliced]
+                            data[latt_size_str][ferm_act_string][κ_str][
+                                feynhellopstring
+                            ][feynhellstring][source_sink_string][p_str][γ_str] = [
+                                record_sliced
+                            ]
                             datasets += 1
                             filenumber += 1
                         else:
-                            data[latt_size_str][ferm_act_string][κ_str][feynhellopstring][feynhellstring][source_sink_string][
-                                p_str
-                            ][γ_str].append(record_sliced)
+                            data[latt_size_str][ferm_act_string][κ_str][
+                                feynhellopstring
+                            ][feynhellstring][source_sink_string][p_str][γ_str].append(
+                                record_sliced
+                            )
                             datasets += 1
                     else:
                         None
@@ -418,7 +427,7 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
                                             pickle.dump(np.array(lvl8), file_out)
     # print("\n")
     process = psutil.Process()
-    print(process.memory_info().rss / 1024 ** 2)  # in bytes
+    print(process.memory_info().rss / 1024**2)  # in bytes
     return
 
 
@@ -440,6 +449,7 @@ def smearing_names(name):
     names = {"gauge_inv_jacobi": "gij"}
     return names[name]
 
+
 def γString(n):
     names = [
         "gI",
@@ -460,6 +470,7 @@ def γString(n):
         "g5",
     ]
     return names[n]
+
 
 def get_obj_size(obj):
     marked = {id(obj)}

@@ -195,8 +195,8 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
                 or ferm_act_string_2 == "unprec_slrc_feynhell"
             ):
                 ferm_act_string = "unprec_slrc_feynhell"
-            else :
-                ferm_act_string = ferm_act_string_1+"_"+ferm_act_string_2
+            else:
+                ferm_act_string = ferm_act_string_1 + "_" + ferm_act_string_2
 
             # if ferm_act_string == "clover":
             #     clover_coeff = (
@@ -306,7 +306,9 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
             for n, p in enumerate(mom_list):
                 # Check whether momdict exists and whether the current momentum is included in momdict
                 # print(feynhellopstring)
-                if momdict == None or ((feynhellopstring in momdict) and (p in momdict[feynhellopstring])):
+                if momdict == None or (
+                    (feynhellopstring in momdict) and (p in momdict[feynhellopstring])
+                ):
                     p_str = "p" + "".join([f"{p_i:+d}" for p_i in p])
                     for b in range(baryon_number):
                         bar_str = baryon_names(b)
@@ -500,7 +502,7 @@ def unpack_barspec_FH(filelist_iter, loc=".", momdict=None):
                                             pickle.dump(np.array(lvl8), file_out)
     # print("\n")
     process = psutil.Process()
-    print(process.memory_info().rss / 1024 ** 2)  # in bytes
+    print(process.memory_info().rss / 1024**2)  # in bytes
     return
 
 
