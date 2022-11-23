@@ -47,5 +47,5 @@ momdict:
 # filenamelist: [ "b5p80kp122810kp122810_000.lst", "b5p80kp122810kp122810_220.lst", "b5p80kp122810kp122810_422.lst", "b5p80kp122810kp122810_442.lst", "b5p80kp122810kp122810_600.lst", "b5p80kp122810kp122810_642.lst"]
 filenamelist: [ "b5p80kp122810kp122810.lst"]
 filenamelist_meson: [ "b5p80kp122810kp122810_meson.lst"]
-savelocation: "/scratch/usr/hhpmbate/chroma_2pt/48x96/b5p80kp122810kp122810/vector/lp001lp0001_g2_g4_q000_q220_q422_q442_q600_q642/pickle/"
+savelocation: "/scratch/usr/hhpmbate/pickle_files/meson/"
 

@@ -1,7 +1,8 @@
 from pathlib import Path
 import sys
+import pprint
 
-import picklelime.unpack_messpec as ub
+import picklelime.unpack_messpec_fh as ub
 from picklelime.util import read_config
 from picklelime.util import find_file
 
@@ -12,7 +13,7 @@ else:
     print("no config yaml given")
     exit()
 
-print(config["momdict"])
+pprint.pprint(config["momdict"])
 
 for filename in config["filenamelist_meson"]:
     output_dir = Path(config["savelocation"])
@@ -22,7 +23,7 @@ for filename in config["filenamelist_meson"]:
     with open(filename_loc, "r") as f:
         config_list = [line.strip() for line in f]
     config_list.sort()
-    ub.unpack_messpec(config_list, loc=str(output_dir))  # , momdict=config["momdict"])
+    ub.unpack_messpec_FH(config_list, loc=str(output_dir), momdict=config["momdict"])
 
 
 # momdict = {
