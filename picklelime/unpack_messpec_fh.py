@@ -17,7 +17,7 @@ magic_bytes = b"Eg\x89\xab"
 Nd = 4
 
 
-def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
+def readlimefile(filename, data, momdict, datasets, filenumber):
     with open(filename, "rb") as file_in:
         head, record = cf.ReadRecord(file_in)
         # print("size =", sys.getsizeof(record) / 1024)
@@ -40,10 +40,10 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
         latt_size_str = "x".join(
             str(x) for x in latt_size if not (x in seen or seen.add(x))
         )
-        time_rev = root.find("Input").find("Param").find("time_rev").text == "true"
-        print("\n\ntime_rev = ", time_rev)
+        # time_rev = root.find("Input").find("Param").find("time_rev").text == "true"
+        # print("\n\ntime_rev = ", time_rev)
         # Fix time-rev to false for now
-        time_rev = False
+        # time_rev = False
 
         mom2_max = int(root.find("Input").find("Param").find("mom2_max").text)
         num_mom, mom_list = cf.CountMom(mom2_max, Nd)
@@ -346,7 +346,7 @@ def readlimefile(filename, data, data_trev, momdict, datasets, filenumber):
         # del record
         # del head
         # gc.collect()
-    return data, data_trev, time_rev, datasets, filenumber
+    return data, datasets, filenumber
 
 
 def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
@@ -355,7 +355,6 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
     This works very similarly to the unpack_messpec function but it has two added levels which it loops over, the feynhell operator and the feynhell parameters (lambdas). It also takes a dictionary as input which can specify the momentum values to be unpacked for each feynhellopstring.
     """
     data = rec_dd()
-    data_trev = rec_dd()
 
     file_count = 0
     emergency_dumps = 0
@@ -369,8 +368,8 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
     print("reading limes")
     for ifile, filename in enumerate(filelist_iter):
         print(f"file {ifile}/{len(filelist_iter)}")
-        data, data_trev, time_rev, datasets, filenumber = readlimefile(
-            filename, data, data_trev, momdict, datasets, filenumber
+        data, datasets, filenumber = readlimefile(
+            filename, data, momdict, datasets, filenumber
         )
 
     print(f"datasets = {int(datasets)}")
@@ -394,18 +393,20 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
 
                                 os.system(f"mkdir -p {out_dir}")
 
-                                ncfg = len(lvl7.item()[0])
-                                out_name = f"messpec_full_{ncfg}cfgs.pickle"
-                                print("np.shape(lvl7.items())")
-                                with open(out_dir + out_name, "wb") as file_out:
-                                    pickle.dump(np.array(lvl7), file_out)
+                                # print("lvl7 shape", lvl7.keys())
+                                # print("lvl7 shape", [key for key in lvl7.items()])
 
-                                for mes, lvl8 in lvl7.items():
-                                    # counter += 1
-                                    ncfg = len(lvl8)
-                                    out_name = f"messpec_{mes}_{ncfg}cfgs.pickle"
-                                    with open(out_dir + out_name, "wb") as file_out:
-                                        pickle.dump(np.array(lvl8), file_out)
+                                ncfg = len(list(lvl7.items())[0])
+                                out_name = f"messpec_full_{ncfg}cfgs.pickle"
+                                with open(out_dir + out_name, "wb") as file_out:
+                                    pickle.dump(lvl7, file_out)
+
+                                # for mes, lvl8 in lvl7.items():
+                                #     # counter += 1
+                                #     ncfg = len(lvl8)
+                                #     out_name = f"messpec_{mes}_{ncfg}cfgs.pickle"
+                                #     with open(out_dir + out_name, "wb") as file_out:
+                                #         pickle.dump(np.array(lvl8), file_out)
 
     process = psutil.Process()
     print(process.memory_info().rss / 1024**2)  # in bytes
