@@ -2,7 +2,7 @@
 import gc
 import numpy as np
 import xml.etree.ElementTree as ET
-from . import core_functions as cf
+import picklelime.core_functions as cf
 import os
 import itertools
 import dill as pickle
@@ -14,7 +14,7 @@ magic_bytes = b"Eg\x89\xab"
 Nd = 4
 
 
-def unpack_messpec(filelist_iter, loc="."):
+def unpack_messpec(filelist_iter, loc=".", momdict=None):
     data = rec_dd()
     file_count = 0
 
