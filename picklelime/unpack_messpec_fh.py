@@ -393,14 +393,13 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None):
 
                                 os.system(f"mkdir -p {out_dir}")
 
-                                # print("lvl7 shape", lvl7.keys())
-                                # print("lvl7 shape", [key for key in lvl7.items()])
-
+                                # Save all mesons in one big file
                                 ncfg = len(list(lvl7.items())[0])
                                 out_name = f"messpec_full_{ncfg}cfgs.pickle"
                                 with open(out_dir + out_name, "wb") as file_out:
                                     pickle.dump(lvl7, file_out)
 
+                                # # Save each meson as an individual file (16x16 files)
                                 # for mes, lvl8 in lvl7.items():
                                 #     # counter += 1
                                 #     ncfg = len(lvl8)
