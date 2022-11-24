@@ -444,11 +444,11 @@ def unpack_barspec_FH(filelist_iter, loc=".", momdict=None):
         data, data_trev, time_rev, datasets, filenumber = readlimefile(
             filename, data, data_trev, momdict, datasets, filenumber
         )
-        # print("\n")
-        # print(os.path.getsize(filename) / 1024**2)
-        # process = psutil.Process()
-        # print(process.memory_info().rss / 1024**2)  # in bytes
-        # print("size =", get_obj_size(data) / 1024 ** 2)
+        print("\n")
+        print(os.path.getsize(filename) / 1024**2)
+        process = psutil.Process()
+        print(process.memory_info().rss / 1024**2)  # in bytes
+        print("size =", get_obj_size(data) / 1024 ** 2)
 
     print(f"datasets = {int(datasets)}")
     print(f"filenumber = {int(filenumber)}")

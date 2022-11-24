@@ -310,7 +310,8 @@ def readlimefile(
                             [gamma1, gamma2] in gamma_combinations
                         ):
                             gamma_str = f"{gammaString(gamma1)}-{gammaString(gamma2)}"
-                            record_sliced = record[gamma1, gamma2, n]
+                            record_sliced = copy.deepcopy(record[gamma1, gamma2, n])
+                            # record_sliced = record[gamma1, gamma2, n]
                             if (
                                 type(
                                     data[latt_size_str][ferm_act_string][kappa_str][
@@ -354,7 +355,7 @@ def readlimefile(
             # print("size =", sys.getsizeof(record) / 1024)
         # del record
         # del head
-        # gc.collect()
+        # gc.collect(generation=2)
     return data, datasets, filenumber
 
 
@@ -392,11 +393,11 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None, small=False):
             filenumber,
             gamma_combinations=gamma_combinations,
         )
-        print("\n")
-        print(os.path.getsize(filename) / 1024**2)
-        process = psutil.Process()
-        print(process.memory_info().rss / 1024**2)  # in bytes
-        print("size =", get_obj_size(data) / 1024**2)
+        # print("\n")
+        # print(os.path.getsize(filename) / 1024**2)
+        # process = psutil.Process()
+        # print(process.memory_info().rss / 1024**2)  # in bytes
+        # print("size =", get_obj_size(data) / 1024**2)
 
     print(f"datasets = {int(datasets)}")
     print(f"filenumber = {int(filenumber)}")
