@@ -375,9 +375,9 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None, small=False):
     datasets = 0
     if small:
         gamma_combinations = gammaCombinations()
-    else: 
+    else:
         gamma_combinations = None
-    
+
     # Reading in the data by opening each file in turn
     print("reading limes")
     for ifile, filename in enumerate(filelist_iter):
@@ -385,8 +385,18 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None, small=False):
         # print("datasets = ",datasets)
         # print("filenumber = ",filenumber)
         data, datasets, filenumber = readlimefile(
-            filename, data, momdict, datasets, filenumber, gamma_combinations=gamma_combinations
+            filename,
+            data,
+            momdict,
+            datasets,
+            filenumber,
+            gamma_combinations=gamma_combinations,
         )
+        print("\n")
+        print(os.path.getsize(filename) / 1024**2)
+        process = psutil.Process()
+        print(process.memory_info().rss / 1024**2)  # in bytes
+        print("size =", get_obj_size(data) / 1024**2)
 
     print(f"datasets = {int(datasets)}")
     print(f"filenumber = {int(filenumber)}")
