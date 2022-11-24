@@ -25,9 +25,11 @@ def readlimefile(
         head, record = cf.ReadRecord(file_in)
         # print("size =", sys.getsizeof(record) / 1024)
         if head[:4] != magic_bytes:
+            print(filename)
             raise IOError("Record header missing magic bytes.")
 
         if not head[16:].startswith(b"qcdsfDir"):
+            print(filename)
             raise IOError("Missing qcdsfDir record")
 
         tree = ET.ElementTree(ET.fromstring(record.decode("utf-8", "ignore")))
@@ -56,6 +58,7 @@ def readlimefile(
 
         while head != b"":
             if not head[16:].startswith(b"meta-xml"):
+                print(filename)
                 raise IOError("Expecting meta-xml record")
             tree = ET.ElementTree(ET.fromstring(record.decode("utf-8", "ignore")))
             root = tree.getroot()
@@ -293,6 +296,7 @@ def readlimefile(
 
             # Sanity check
             if not head[16:].startswith(b"mesons-bin"):
+                print(filename)
                 raise IOError("Expecting mesons-bin record")
 
             record = np.frombuffer(record, ">f8").reshape(
@@ -403,7 +407,7 @@ def unpack_messpec_FH(filelist_iter, loc=".", momdict=None, small=False):
     print(f"filenumber = {int(filenumber)}")
     # print(f"configuration number = {int(datasets/filenumber)}")
     # print(43 * "-" + f"\n\twriting {int(filenumber)} pickle files\n" + 43 * "-")
-    print(43 * "-" + f"\n\twriting {int(filenumber)/(16*16)} pickle files\n" + 43 * "-")
+    print(43 * "-" + f"\n\twriting {int(filenumber)/(16)} pickle files\n" + 43 * "-")
 
     counter = 0
     for latt_size, lvl1 in data.items():
