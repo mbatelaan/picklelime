@@ -5,7 +5,7 @@
 #SBATCH --tasks-per-node 1
 #SBATCH -p standard96
 #SBATCH -A hhp00045
-#SBATCH -J pickle_messpec
+#SBATCH -J pickle_barspec
 
 # run job
 umask 022
@@ -15,10 +15,10 @@ echo "job start date: $(date)"
 
 module load anaconda3/2019.10
 
-# python -u unpack_mesons.py b5p80kp122810kp122810 > messpec_job.out
-# python -u unpack_mesons.py b5p80kp122810kp122810_src2 > messpec_job.out
-# python -u unpack_mesons.py b5p80kp122880kp122670 > messpec_job2.out
-python -u unpack_mesons.py b5p80kp122940kp122551 > messpec_job3.out
+# python -u unpack_FH.py b5p80kp122810kp122810 > barspec_job.out
+# python -u unpack_FH.py b5p80kp122810kp122810_src2 > barspec_job.out
+# python -u unpack_FH.py b5p80kp122880kp122670 > barspec_job2.out
+python -u unpack_FH.py b5p80kp122940kp122551 > barspec_job3.out
 
 end_time=$(date +%M)
 echo "job end date: $(date)"

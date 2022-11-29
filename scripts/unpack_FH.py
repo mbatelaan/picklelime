@@ -1,5 +1,6 @@
 from pathlib import Path
 import sys
+import pprint
 
 import picklelime.unpack_barspec_fh as ub
 from picklelime.util import read_config
@@ -12,12 +13,12 @@ else:
     print("no config yaml given")
     exit()
 
-print(config["momdict"])
+pprint.pprint(config["momdict"])
 
 for filename in config["filenamelist"]:
     # output = filename[:-4] + "/"
     output_dir = Path(config["savelocation"])
-    print(str(output_dir))
+    # print(str(output_dir))
     output_dir.mkdir(parents=True, exist_ok=True)
     filename_loc = find_file("config", config["lattice_name"], filename)
     # filename_loc = find_file("config", filename)
