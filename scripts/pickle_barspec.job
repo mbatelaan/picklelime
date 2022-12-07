@@ -19,7 +19,8 @@ module load anaconda3/2019.10
 # python -u unpack_FH.py b5p80kp122810kp122810_src2 > barspec_job.out
 # python -u unpack_FH.py b5p80kp122880kp122670 > barspec_job2.out
 # python -u unpack_FH.py b5p80kp122940kp122551 > barspec_job3.out
-python -u unpack_FH.py b5p40kp119989kp119812 > barspec_job4.out
+# python -u unpack_FH.py b5p40kp119989kp119812 > barspec_job4.out
+python -u unpack_FH.py b5p40kp119989kp119812_src2 > barspec_job5.out
 
 end_time=$(date +%M)
 echo "job end date: $(date)"

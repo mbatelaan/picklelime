@@ -36,7 +36,7 @@ momdict:
       - [-1, 0, 0]
       - [1, 0, 0]
       - [0, 0, 0]
-filenamelist: [ "b5p40kp119989kp119812.lst"]
-filenamelist_meson: [ "b5p40kp119989kp119812_meson.lst"]
-savelocation: "/scratch/usr/hhpmbate/pickle_files/b5p40kp119989kp119812/"
+filenamelist: [ "b5p40kp119989kp119812_src2.lst"]
+filenamelist_meson: [ "b5p40kp119989kp119812_meson_src2.lst"]
+savelocation: "/scratch/usr/hhpmbate/pickle_files/b5p40kp119989kp119812_src2/"
 
