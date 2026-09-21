@@ -74,7 +74,7 @@ def unpack_bar3ptfn(
         # seqsrc_type = [
         #     x.find("seqsrc_type").text
         #     + "_"
-        #     + γString(int(x.find("gamma_insertion").text))
+        #     + gammaString(int(x.find("gamma_insertion").text))
         #     + "_t"
         #     + str(
         #         (int(x.find("t_sink").text) - int(x.find("t_source").text))
@@ -86,7 +86,7 @@ def unpack_bar3ptfn(
         seqsrc_type = [
             x.find("seqsrc_type").text
             + "_"
-            + γString(int(x.find("gamma_insertion").text))
+            + gammaString(int(x.find("gamma_insertion").text))
             + "_t"
             + str(
                 (int(x.find("t_sink").text) - int(x.find("t_source").text))
@@ -120,11 +120,11 @@ def unpack_bar3ptfn(
             .findall("elem")
         )
 
-        forward_κ = [
+        forward_kappa = [
             float(x.find("ForwardProp").find("FermionAction").find("Kappa").text)
             for x in forward_props
         ]
-        current_κ_in = float(
+        current_kappa_in = float(
             root.find("bar3ptfn")
             .find("Propagator_record_info")
             .find("Propagator")
@@ -134,7 +134,7 @@ def unpack_bar3ptfn(
             .text
         )
 
-        current_κ_out = [
+        current_kappa_out = [
             float(
                 x.find("SequentialProp_record_info")
                 .find("SequentialProp")
@@ -147,28 +147,28 @@ def unpack_bar3ptfn(
         ]
 
         if simplify:
-            κ_simplified = [
-                set(forward_κ + [current_κ_in] + [x]) for x in current_κ_out
+            kappa_simplified = [
+                set(forward_kappa + [current_kappa_in] + [x]) for x in current_kappa_out
             ]
-            κ_string = ["".join([format_kappa(k) for k in x]) for x in κ_simplified]
+            kappa_string = ["".join([format_kappa(k) for k in x]) for x in kappa_simplified]
 
-        elif (transition_form) or (~all([x == current_κ_in for x in current_κ_out])):
-            κ_string = [
-                format_kappa(current_κ_in)
+        elif (transition_form) or (~all([x == current_kappa_in for x in current_kappa_out])):
+            kappa_string = [
+                format_kappa(current_kappa_in)
                 + "t"
                 + format_kappa(x)
                 + "_"
-                + "".join([format_kappa(y) for y in forward_κ])
-                for x in current_κ_out
+                + "".join([format_kappa(y) for y in forward_kappa])
+                for x in current_kappa_out
             ]
 
         else:
-            κ_string = [
+            kappa_string = [
                 "c"
                 + format_kappa(x)
                 + "_"
-                + "".join([format_kappa(y) for y in forward_κ])
-                for x in current_κ_out
+                + "".join([format_kappa(y) for y in forward_kappa])
+                for x in current_kappa_out
             ]
 
         ferm_act_string = (
@@ -296,7 +296,7 @@ def unpack_bar3ptfn(
         for n_seq, seq in enumerate(seqsrc_type):
             # print(f"n_seq = {n_seq}")
             # print(f"sink_mom =  {sink_moms[n_seq]}")
-            κ_str = κ_string[n_seq]
+            kappa_str = kappa_string[n_seq]
 
             for n_form_fac in range(num_form_fac):
                 form_fac_str = format_form_fac(n_form_fac, deriv)
@@ -317,35 +317,35 @@ def unpack_bar3ptfn(
 
                         if (
                             type(
-                                data[latt_size_str][ferm_act_string][κ_str][
+                                data[latt_size_str][ferm_act_string][kappa_str][
                                     source_sink_string
                                 ][seq][mom_str][form_fac_str]
                             )
                             == collections.defaultdict
                             and len(
-                                data[latt_size_str][ferm_act_string][κ_str][
+                                data[latt_size_str][ferm_act_string][kappa_str][
                                     source_sink_string
                                 ][seq][mom_str][form_fac_str].keys()
                             )
                             == 0
                         ):
-                            data[latt_size_str][ferm_act_string][κ_str][
+                            data[latt_size_str][ferm_act_string][kappa_str][
                                 source_sink_string
                             ][seq][mom_str][form_fac_str] = [record_sliced]
                         else:
-                            data[latt_size_str][ferm_act_string][κ_str][
+                            data[latt_size_str][ferm_act_string][kappa_str][
                                 source_sink_string
                             ][seq][mom_str][form_fac_str].append(record_sliced)
 
     for latt_size, lvl1 in data.items():
         for ferm_act, lvl2 in lvl1.items():
-            for κ, lvl3 in lvl2.items():
+            for kappa, lvl3 in lvl2.items():
                 for source_sink, lvl4 in lvl3.items():
                     for seq, lvl5 in lvl4.items():
                         for p, lvl6 in lvl5.items():
                             out_dir = (
                                 loc
-                                + f"/bar3ptfn/{latt_size}/{ferm_act}/{κ}/{seq}"
+                                + f"/bar3ptfn/{latt_size}/{ferm_act}/{kappa}/{seq}"
                                 + f"/{source_sink}/{p}/"
                             )
 
@@ -364,8 +364,8 @@ def rec_dd():
     return collections.defaultdict(rec_dd)
 
 
-def format_kappa(κ):
-    return "k" + f"{κ:.6f}".lstrip("0").replace(".", "p")
+def format_kappa(kappa):
+    return "k" + f"{kappa:.6f}".lstrip("0").replace(".", "p")
 
 
 def FormatMom(mom):
@@ -389,7 +389,7 @@ def smearing_names(name):
 
 def format_form_fac(form_fac_number, deriv):
     gamma_num = form_fac_number % 16
-    gamma_str = γString(gamma_num)
+    gamma_str = gammaString(gamma_num)
     mu = (form_fac_number // 16) % 4
     nu = form_fac_number // 64
     if deriv == 0:
@@ -403,7 +403,7 @@ def format_form_fac(form_fac_number, deriv):
     return result
 
 
-def γString(n):
+def gammaString(n):
     names = [
         "gI",
         "g0",
@@ -425,7 +425,7 @@ def γString(n):
     return names[n]
 
 
-def γString_euclidean(n):
+def gammaString_euclidean(n):
     names = [
         "gI",
         "g1",
@@ -447,7 +447,7 @@ def γString_euclidean(n):
     return names[n]
 
 
-def γString_chroma(n):
+def gammaString_chroma(n):
     names = [
         "g0",
         "g1",
