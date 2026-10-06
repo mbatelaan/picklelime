@@ -369,5 +369,18 @@ def baryon_names(number):
         28: "lambda8-sigma0_nf3",
         29: "sigma0-lambda8_nf3",
         30: "delta_nf3",
+        31: "p_to_n_unpol",
+        32: "p_to_n_g1_unpol",
+        33: "p_to_n_g2_unpol",
+        34: "p_to_n_g3_unpol",
+        35: "p_to_n_g4_unpol",
+        36: "p_to_n_g1",
+        37: "p_to_n_g2",
+        38: "p_to_n_g3",
+        39: "p_to_n_polx",
+        40: "p_to_n_poly",
+        41: "p_to_n_polz",
+        42: "p_to_p_u_unpol",   # intended; source has fall-through bug
+        43: "p_to_p_u_polz",
     }
     return names[number]
